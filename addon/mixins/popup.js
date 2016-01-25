@@ -24,13 +24,13 @@ export default Mixin.create({
     return document.createElement('div');
   }),
 
-  popupOpenDidChange: observer('popupOpen', function() {
-    if (this.get('popupOpen')) {
-      if (!this._popup._isOpen) { this._layer.openPopup(); }
-    } else {
-      if (this._popup._isOpen) { this._layer.closePopup(); }
-    }
-  }),
+  // popupOpenDidChange: observer('popupOpen', function() {
+  //   if (this.get('popupOpen')) {
+  //     if (!this._popup._isOpen) { this._layer.openPopup(); }
+  //   } else {
+  //     if (this._popup._isOpen) { this._layer.closePopup(); }
+  //   }
+  // }),
 
   willInsertElement() {
     this._super(...arguments);
@@ -54,38 +54,40 @@ export default Mixin.create({
   didCreateLayer() {
     this._super(...arguments);
     if (this.get('hasBlock')) {
-      this._popup = this.L.popup({}, this._layer);
-      this._popup.setContent(this.get('destinationElement'));
-      this._layer.bindPopup(this._popup);
+      // this._popup = this.L.popup({}, this._layer);
+      // this._popup.setContent(this.get('destinationElement'));
 
-      this._hijackPopup();
+      // this.set('popupOpen', true);
+      // this._layer.bindPopup(this._popup);
 
-      this.popupOpenDidChange();
+      // this._hijackPopup();
+
+      // this.popupOpenDidChange();
     }
   },
 
-  _hijackPopup() {
-    let oldOnAdd = this._popup.onAdd;
-    this._popup.onAdd = (map) => {
-      this.set('popupOpen', true);
-      schedule('render', () => {
-        oldOnAdd.call(this._popup, map);
-      });
-    };
+  // _hijackPopup() {
+  //   let oldOnAdd = this._popup.onAdd;
+  //   this._popup.onAdd = (map) => {
+  //     this.set('popupOpen', true);
+  //     schedule('render', () => {
+  //       oldOnAdd.call(this._popup, map);
+  //     });
+  //   };
 
-    let oldOnRemove = this._popup.onRemove;
-    this._popup.onRemove = (map) => {
-      oldOnRemove.call(this._popup, map);
-      this.set('popupOpen', false);
-    };
-  },
+  //   let oldOnRemove = this._popup.onRemove;
+  //   this._popup.onRemove = (map) => {
+  //     oldOnRemove.call(this._popup, map);
+  //     this.set('popupOpen', false);
+  //   };
+  // },
 
   willDestroyLayer() {
     this._super(...arguments);
     if (this.get('hasBlock')) {
-      this._layer.closePopup();
-      this._layer.unbindPopup();
-      delete this._popup;
+      // this._layer.closePopup();
+      // this._layer.unbindPopup();
+      // delete this._popup;
       delete this._firstNode;
       delete this._lastNode;
     }

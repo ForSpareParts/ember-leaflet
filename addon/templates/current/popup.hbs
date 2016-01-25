@@ -1,4 +1,13 @@
 {{#if hasBlock}}{{setHasBlock}}{{/if}}
-{{#if popupOpen}}
-  {{yield}}
+{{#if location}}
+  {{#if popupOpen}}
+    {{#popup-layer location=location offset=popupOffset}}
+      {{yield}}
+    {{/popup-layer}}
+  {{/if}}
+{{else}}
+  {{!-- old style --}}
+  {{#if popupOpen}}
+    {{yield}}
+  {{/if}}
 {{/if}}
