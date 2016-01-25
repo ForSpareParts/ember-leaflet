@@ -33,9 +33,7 @@ export default BaseLayer.extend(DraggabilityMixin, {
   location: toLatLng(),
 
   createLayer() {
-    let layer = this.L.marker(...this.get('requiredOptions'), this.get('options'));
-
-    return layer;
+    return layer = this.L.marker(...this.get('requiredOptions'), this.get('options'));
   },
 
   didCreateLayer() {
