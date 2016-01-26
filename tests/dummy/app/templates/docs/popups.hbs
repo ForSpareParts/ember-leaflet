@@ -1,0 +1,51 @@
+<h1 class="doc-page-title">Standalone popups</h1>
+
+<p>In addition to creating popups as part of other layers, you can also create
+independent popups using <code>popup-layer</code>. Try clicking anywhere on the map
+below.</p>
+
+{{#code-sample as |component|}}
+  {{#code-block language="handlebars" class=(concat "code-sample-snippet " (if (eq component.activeTab "template") "active"))}}
+\{{#leaflet-map lat=lat lng=lng zoom=zoom}}
+  \{{tile-layer url="http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"}}
+  \{{#if popupLocation}}
+    \{{#popup-layer location=popupLocation closePopup=(action 'resetPopupLocation') closeOnClick=false}}
+      This popup can move!
+    \{{/popup-layer}}
+  \{{/if}}
+\{{/leaflet-map}}{{/code-block}}
+  {{#code-block language="javascript" class=(concat "code-sample-snippet " (if (eq component.activeTab "javascript") "active"))}}
+export default Ember.Controller.extend({
+  lat: 45.519743,
+  lng: -122.680522,
+  zoom: 10,
+  popupLocation: [45.519743, -122.680522],
+
+  actions: {
+    setPopupLocation(e) {
+      this.set('popupLocation', e.latlng);
+    },
+
+    resetPopupLocation() {
+      this.set('popupLocation', null);
+    }
+  }
+});{{/code-block}}
+  <div class="code-sample-snippet result {{if (eq component.activeTab "result") "active"}}">
+    {{#leaflet-map lat=lat lng=lng zoom=zoom onClick=(action 'setPopupLocation')}}
+      {{tile-layer url="http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"}}
+      {{#if popupLocation}}
+        {{#popup-layer location=popupLocation closePopup=(action 'resetPopupLocation') closeOnClick=false}}
+          This popup can move!
+        {{/popup-layer}}
+      {{/if}}
+    {{/leaflet-map}}
+  </div>
+{{/code-sample}}
+
+<p>Note the binding of <code>resetPopupLocation</code> to <code>closePopup</code>.
+By default, standalone popups trigger the <code>closePopup</code> action when
+you click on the close button, or on the map background (the latter has been
+disabled in this example, using <code>closeOnClick=false</code>). Popups <strong>don't
+control their own rendering</strong>: you just show or hide them from the parent
+context, like any other layer or component.</p>

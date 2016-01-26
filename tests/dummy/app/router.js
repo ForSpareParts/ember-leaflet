@@ -15,13 +15,14 @@ Router.map(function() {
     this.route('actions');
     this.route('templates');
     this.route('contextual-components');
+    this.route('popups');
 
     // COMPONENTS
     this.route('component', {path: ':component_name'});
   });
 
   this.route('addons');
-  
+
 });
 
 export default Router;
