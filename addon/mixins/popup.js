@@ -3,93 +3,54 @@ import layout from '../templates/popup';
 const { computed, observer, Mixin, run: { schedule } } = Ember;
 
 export default Mixin.create({
+ layout,
 
-  // we need a "tagfull" here to have `this.element`
-  tagName: 'div',
+  defaultPopupOffset: null, //calculated at runtime
 
-  layout,
-  popupOpen: false,
+  popupOffset: null,
+  popupLocation: null,
 
-  /*
-   * Evil hack by @rwjblue.
-   * `hasBlock` isn't available in js land.
-   * More info: https://github.com/miguelcobain/rfcs/blob/js-has-block/text/0000-js-has-block.md#alternatives
-   */
-  setHasBlock: computed(function() {
-    this.set('hasBlock', true);
-  }),
-
-  // creates a document fragment that will hold the DOM
-  destinationElement: computed(function() {
-    return document.createElement('div');
-  }),
-
-  // popupOpenDidChange: observer('popupOpen', function() {
-  //   if (this.get('popupOpen')) {
-  //     if (!this._popup._isOpen) { this._layer.openPopup(); }
-  //   } else {
-  //     if (this._popup._isOpen) { this._layer.closePopup(); }
-  //   }
-  // }),
-
-  willInsertElement() {
+  init() {
     this._super(...arguments);
-    this._firstNode = this.element.firstChild;
-    this._lastNode = this.element.lastChild;
-    this.appendToDestination();
-  },
 
-  appendToDestination() {
-    let destinationElement = this.get('destinationElement');
-    this.appendRange(destinationElement, this._firstNode, this._lastNode);
-  },
+    if (!this.get('setPopupOpen')) {
+      this.set('setPopupOpen', (value) => {
+        this.set('popupOpen', value);
+      });
+    }
 
-  appendRange(destinationElement, firstNode, lastNode) {
-    while(firstNode) {
-      destinationElement.insertBefore(firstNode, null);
-      firstNode = firstNode !== lastNode ? lastNode.parentNode.firstChild : null;
+    if (!this.get('onClick')) {
+      this.set('onClick', this._getDefaultOnClick());
     }
   },
 
   didCreateLayer() {
     this._super(...arguments);
-    if (this.get('hasBlock')) {
-      // this._popup = this.L.popup({}, this._layer);
-      // this._popup.setContent(this.get('destinationElement'));
 
-      // this.set('popupOpen', true);
-      // this._layer.bindPopup(this._popup);
+    this.set('defaultPopupOffset', this._getDefaultPopupOffset());
 
-      // this._hijackPopup();
-
-      // this.popupOpenDidChange();
+    //if the user has already specified a popupOffset, keep it
+    if (!this.get('popupOffset')) {
+      //otherwise, use the default
+      this.set('popupOffset', this.get('defaultPopupOffset'));
     }
   },
 
-  // _hijackPopup() {
-  //   let oldOnAdd = this._popup.onAdd;
-  //   this._popup.onAdd = (map) => {
-  //     this.set('popupOpen', true);
-  //     schedule('render', () => {
-  //       oldOnAdd.call(this._popup, map);
-  //     });
-  //   };
+  /**
+   * Return the default offset position of a popup for this class. If a user
+   * specifies `popupOffset`, their value will be used instead.
+   */
+  _getDefaultPopupOffset() {
+    return L.Popup.prototype.options.offset;
+  },
 
-  //   let oldOnRemove = this._popup.onRemove;
-  //   this._popup.onRemove = (map) => {
-  //     oldOnRemove.call(this._popup, map);
-  //     this.set('popupOpen', false);
-  //   };
-  // },
 
-  willDestroyLayer() {
-    this._super(...arguments);
-    if (this.get('hasBlock')) {
-      // this._layer.closePopup();
-      // this._layer.unbindPopup();
-      // delete this._popup;
-      delete this._firstNode;
-      delete this._lastNode;
-    }
+  /**
+   * Return the default click handler for this class (often used for popups). If
+   * a user specifies `onClick`, their callback will be used instead.
+   */
+  _getDefaultOnClick() {
+    return undefined;
   }
+
 });

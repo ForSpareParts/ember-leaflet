@@ -1,13 +1,10 @@
 {{#if hasBlock}}{{setHasBlock}}{{/if}}
-{{#if location}}
-  {{#if popupOpen}}
-    {{#popup-layer location=location offset=popupOffset}}
+
+{{#if popupOpen}}
+  {{#popup-layer
+    location=popupLocation
+    offset=popupOffset
+    closePopup=(action setPopupOpen false)}}
       {{yield}}
-    {{/popup-layer}}
-  {{/if}}
-{{else}}
-  {{!-- old style --}}
-  {{#if popupOpen}}
-    {{yield}}
-  {{/if}}
+  {{/popup-layer}}
 {{/if}}

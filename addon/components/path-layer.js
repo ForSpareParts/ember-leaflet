@@ -1,7 +1,9 @@
 import BaseLayer from 'ember-leaflet/components/base-layer';
 import PopupMixin from 'ember-leaflet/mixins/popup';
 
-export default BaseLayer.extend(PopupMixin, {
+export default BaseLayer.extend(
+  PopupMixin,
+  {
 
   leafletOptions: [
     'stroke', 'color', 'weight', 'opacity', 'fill', 'fillColor',
@@ -48,5 +50,13 @@ export default BaseLayer.extend(PopupMixin, {
       this.removeObserver(property, this, this._styleObservers[property]);
       delete this._styleObservers[property];
     }, this);
+  },
+
+  _getDefaultOnClick() {
+    return (e) => {
+      //based on https://github.com/Leaflet/Leaflet/blob/v0.7.7/src/layer/vector/Path.Popup.js#L62
+      this.set('popupLocation', e.latlng);
+      this.set('popupOpen', true);
+    };
   }
 });
