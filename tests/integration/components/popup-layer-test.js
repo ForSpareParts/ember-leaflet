@@ -1,25 +1,47 @@
-// import { moduleForComponent, test } from 'ember-qunit';
-// import hbs from 'htmlbars-inline-precompile';
+import { moduleForComponent, test } from 'ember-qunit';
+import hbs from 'htmlbars-inline-precompile';
+import locations from '../../helpers/locations';
 
-// moduleForComponent('popup-layer', 'Integration | Component | popup layer', {
-//   integration: true
-// });
+moduleForComponent('popup-layer', 'Integration | Component | popup layer', {
+  integration: true,
+  beforeEach() {
+    this.set('center', locations.nyc);
+    this.set('zoom', 13);
 
-// test('it renders', function(assert) {
+    this.set('popupLocation', locations.nyc);
+    this.set('popupOpen', true);
+    this.set('setPopupOpen', (value) => this.set('popupOpen', value));
+  }
+});
 
-//   // Set any properties with this.set('myProperty', 'value');
-//   // Handle any actions with this.on('myAction', function(val) { ... });" + EOL + EOL +
+test('it fires the close event', function(assert) {
 
-//   this.render(hbs`{{popup-layer}}`);
+  this.render(hbs`
+    {{#leaflet-map zoom=zoom center=center}}
+      {{#if popupOpen}}
+        {{#popup-layer
+            location=popupLocation
+            closePopup=(action setPopupOpen false)}}
+          Popup text!
+        {{/popup-layer}}
+      {{/if}}
+    {{/leaflet-map}}
+  `);
 
-//   assert.equal(this.$().text().trim(), '');
+  assert.equal(this.$('.leaflet-popup-content-wrapper').text().trim(), 'Popup text!');
 
-//   // Template block usage:" + EOL +
-//   this.render(hbs`
-//     {{#popup-layer}}
-//       template block text
-//     {{/popup-layer}}
-//   `);
 
-//   assert.equal(this.$().text().trim(), 'template block text');
-// });
+  //test that the close button fires the action
+  this.$('.leaflet-popup-close-button').click();
+  assert.equal(this.$('.leaflet-popup').length, 0);
+  assert.equal(this.get('popupOpen'), false);
+
+  this.set('popupOpen', true);
+  assert.equal(this.$('.leaflet-popup-content-wrapper').text().trim(), 'Popup text!');
+
+  // test that a background click also fires the action
+  this.$('.leaflet-map-pane').click();
+  assert.equal(this.$('.leaflet-popup').length, 0);
+  assert.equal(this.get('popupOpen'), false);
+
+});
