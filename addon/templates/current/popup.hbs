@@ -1,6 +1,6 @@
 {{#if hasBlock}}{{setHasBlock}}{{/if}}
 
-{{#if popupOpen}}
+{{#if (and popupOpen popupLocation popupOffset)}}
   {{#popup-layer
     location=popupLocation
     offset=popupOffset

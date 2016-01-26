@@ -48,14 +48,14 @@ test('popup works', function(assert) {
     {{/leaflet-map}}
   `);
 
-  assert.equal(marker._popup._map, null, 'popup not added until opened');
+  assert.equal(this.$('.leaflet-popup').length, 0, 'popup not added until opened');
 
   Ember.run(() => {
     marker._layer.fire('click', { latlng: locations.nyc });
   });
 
-  assert.ok(!!marker._popup._map, 'popup opened');
-  assert.equal(Ember.$(marker._popup._contentNode).text().trim(), 'Popup content', 'popup content set');
+  assert.equal(this.$('.leaflet-popup').length, 1, 'popup opened');
+  assert.equal(this.$('.leaflet-popup-content-wrapper').text().trim(), 'Popup content', 'popup content set');
 });
 
 test('popup content isn\'t rendered until it is opened (lazy popups)', function(assert) {
@@ -74,7 +74,7 @@ test('popup content isn\'t rendered until it is opened (lazy popups)', function(
     {{/leaflet-map}}
   `);
 
-  assert.equal(marker._popup._map, null, 'popup not added until opened');
+  assert.equal(this.$('.leaflet-popup').length, 0, 'popup not added until opened');
 
   assert.ok(!didRun, 'computed property did not run');
 
@@ -82,7 +82,7 @@ test('popup content isn\'t rendered until it is opened (lazy popups)', function(
     marker._layer.fire('click', { latlng: locations.nyc });
   });
 
-  assert.ok(!!marker._popup._map, 'popup opened');
+  assert.equal(this.$('.leaflet-popup').length, 1, 'popup opened');
   assert.ok(didRun, 'computed property did run');
 
 });
@@ -100,21 +100,21 @@ test('popup opens based on popupOpen', function(assert) {
     {{/leaflet-map}}
   `);
 
-  assert.ok(!!marker._popup._map, 'popup starts open');
-  assert.equal(Ember.$(marker._popup._contentNode).text().trim(), 'Popup content', 'popup content set');
+  assert.equal(this.$('.leaflet-popup').length, 1, 'popup starts open');
+  assert.equal(this.$('.leaflet-popup-content-wrapper').text().trim(), 'Popup content', 'popup content set');
 
   Ember.run(() => {
     this.set('popupOpen', false);
   });
 
-  assert.equal(marker._popup._map, null, 'popup closed');
+  assert.equal(this.$('.leaflet-popup').length, 0, 'popup closed');
 
   Ember.run(() => {
     this.set('popupOpen', true);
   });
 
-  assert.ok(!!marker._popup._map, 'popup opens again');
-  assert.equal(Ember.$(marker._popup._contentNode).text().trim(), 'Popup content', 'popup content set');
+  assert.equal(this.$('.leaflet-popup').length, 1, 'popup opens again');
+  assert.equal(this.$('.leaflet-popup-content-wrapper').text().trim(), 'Popup content', 'popup content set');
 
 });
 
@@ -133,12 +133,11 @@ test('popup closes when layer is destroyed', function(assert) {
     {{/leaflet-map}}
   `);
 
-  let map = layer._map;
-  assert.ok(!!map._popup, 'popup starts open');
-  assert.equal(Ember.$(map._popup._contentNode).text().trim(), 'Popup content', 'popup content set');
+  assert.equal(this.$('.leaflet-popup').length, 1, 'popup starts open');
+  assert.equal(this.$('.leaflet-popup-content-wrapper').text().trim(), 'Popup content', 'popup content set');
 
   this.set('isVisible', false);
 
-  assert.equal(map._popup, null, 'popup closed');
+  assert.equal(this.$('.leaflet-popup').length, 0, 'popup closed');
 
 });

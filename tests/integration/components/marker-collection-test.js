@@ -109,14 +109,14 @@ test('popup remains open when another layer is destroyed', function(assert) {
   assert.equal(createLayersCount, 4);
   assert.equal(destroyLayersCount, 0);
 
-  assert.equal(markers[2]._popup._map, null, 'popup not added until opened');
+  assert.equal(this.$('.leaflet-popup').length, 0, 'popup not added until opened');
 
   Ember.run(() => {
     markers[2]._layer.fire('click', { latlng: locations.nyc });
   });
 
-  assert.ok(!!markers[2]._popup._map, 'marker added to map');
-  assert.equal(Ember.$(markers[2]._popup._contentNode).text().trim(), 'Popup content', 'popup content set');
+  assert.equal(this.$('.leaflet-popup').length, 1, 'marker added to map');
+  assert.equal(this.$('.leaflet-popup-content-wrapper').text().trim(), 'Popup content', 'popup content set');
 
   this.set('markers', [
     restaurant1,
@@ -128,6 +128,6 @@ test('popup remains open when another layer is destroyed', function(assert) {
   assert.equal(createLayersCount, 4);
   assert.equal(destroyLayersCount, 1);
 
-  assert.ok(!!markers[2]._popup._map, 'marker added to map');
-  assert.equal(Ember.$(markers[2]._popup._contentNode).text().trim(), 'Popup content', 'popup content set');
+  assert.equal(this.$('.leaflet-popup').length, 1, 'marker remains on map');
+  assert.equal(this.$('.leaflet-popup-content-wrapper').text().trim(), 'Popup content', 'popup content still set');
 });

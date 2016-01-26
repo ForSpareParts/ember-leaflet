@@ -37,7 +37,7 @@ export default BaseLayer.extend(DraggabilityMixin, PopupMixin, {
 
   _getDefaultPopupOffset() {
     //based on: https://github.com/Leaflet/Leaflet/blob/v0.7.7/src/layer/marker/Marker.Popup.js#L33
-    const popupAnchor = L.point(this._layer.options.icon.options.popupAnchor);
+    const popupAnchor = L.point(this._layer.options.icon.options.popupAnchor || [0, 0]);
     const baseOffset = L.Popup.prototype.options.offset;
 
     return popupAnchor.add(baseOffset);
