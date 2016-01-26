@@ -7,9 +7,6 @@ import PopupMixin from 'ember-leaflet/mixins/popup';
 import toLatLng from 'ember-leaflet/macros/to-lat-lng';
 
 export default BaseLayer.extend(DraggabilityMixin, PopupMixin, {
-
-  tagName: 'div',
-
   leafletRequiredOptions: [
     'location'
   ],
