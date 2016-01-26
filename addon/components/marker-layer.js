@@ -5,7 +5,6 @@ import BaseLayer from 'ember-leaflet/components/base-layer';
 import DraggabilityMixin from 'ember-leaflet/mixins/draggability';
 import PopupMixin from 'ember-leaflet/mixins/popup';
 import toLatLng from 'ember-leaflet/macros/to-lat-lng';
-import layout from 'ember-leaflet/templates/popup';
 
 export default BaseLayer.extend(DraggabilityMixin, PopupMixin, {
 

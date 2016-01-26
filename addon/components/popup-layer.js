@@ -1,11 +1,8 @@
 import Ember from 'ember';
 import layout from 'ember-leaflet/templates/components/popup-layer';
 import toLatLng from 'ember-leaflet/macros/to-lat-lng';
-import PopupMixin from 'ember-leaflet/mixins/popup';
 import BaseLayer from 'ember-leaflet/components/base-layer';
 /* global L */
-
-const { computed, observer, Mixin, run: { schedule } } = Ember;
 
 /**
  * Layer to display a popup in ember-leaflet, based on the PopupMixin in
@@ -62,12 +59,12 @@ export default BaseLayer.extend({
    * `hasBlock` isn't available in js land.
    * More info: https://github.com/miguelcobain/rfcs/blob/js-has-block/text/0000-js-has-block.md#alternatives
    */
-  setHasBlock: computed(function() {
+  setHasBlock: Ember.computed(function() {
     this.set('hasBlock', true);
   }),
 
   // creates a document fragment that will hold the DOM
-  destinationElement: computed(function() {
+  destinationElement: Ember.computed(function() {
     return document.createElement('div');
   }),
 
@@ -117,7 +114,7 @@ export default BaseLayer.extend({
     this._leafletOnRemove = this._layer.onRemove;
 
     //...this function, which does nothing but call your action.
-    this._layer.onRemove = (map) => {
+    this._layer.onRemove = () => {
       if (this.get('closePopup')) {
         this.get('closePopup')();
       }

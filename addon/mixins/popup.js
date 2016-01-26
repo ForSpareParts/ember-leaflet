@@ -1,6 +1,8 @@
 import Ember from 'ember';
 import layout from '../templates/popup';
-const { computed, observer, Mixin, run: { schedule } } = Ember;
+/* global L */
+
+const { Mixin } = Ember;
 
 export default Mixin.create({
  layout,
